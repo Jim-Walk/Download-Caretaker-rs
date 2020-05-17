@@ -5,6 +5,7 @@ authors = ["andrewpsuedonym <j.m.walker@live.co.uk>"]
 edition = "2018"
 description = "Keeps your downloads folder tidy"
 license = "MIT"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
