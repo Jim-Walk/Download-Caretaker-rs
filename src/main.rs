@@ -1,11 +1,37 @@
 extern crate dirs;
+extern crate bat;
+use bat::{PrettyPrinter, line_range::LineRange, line_range::LineRanges};
 use std::time::SystemTime;
 use std::path::Path;
 use std::{io, fs, process};
 
-fn delete_or_move_file(p: &Path){
-    println!("{}", p.display());
-    println!("Move to (d)ocuments, (m)usic, (p)ictures, mo(v)ies or (o)pen");
+
+fn trim_path(p: &Path) -> String {
+
+    let dl_dir = dirs::download_dir().unwrap();    
+    p.strip_prefix(dl_dir).unwrap().to_str().unwrap().to_string()
+
+}
+
+// Helper function to save repeating error checking and print statements
+fn move_file(src: &Path, dest_folder: &Path) {
+    if let Ok(f_name) = src.strip_prefix(dest_folder) {
+        let new_f_name = dest_folder.join(f_name);
+        fs::rename(src, new_f_name).unwrap();
+    }
+    println!("Moved to {}", dest_folder.to_str().unwrap());
+}
+
+fn bat_file(src: &Path) {
+    PrettyPrinter::new().input_file(src)
+                        .line_ranges(LineRanges::from(vec![LineRange::new(0,15)]))
+                        .print().unwrap();
+}
+
+fn delete_or_move_file(p: &Path) {
+    println!("{}", trim_path(p));
+    println!("Move to (d)ocuments, (m)usic, (p)ictures, (v)ideos/mo(v)ies");
+    println!("You can also (b)at the file, or (o)pen it");
     println!("You can (a)bort at any time");
 
     let mut input = String::new();
@@ -14,18 +40,24 @@ fn delete_or_move_file(p: &Path){
        .expect("Failed to read line");
 
    match input.trim().as_ref() {
-       "d" => println!("moved to documents"),
+       "d" => move_file(p, &dirs::document_dir().unwrap()),
+       "m" => move_file(p, &dirs::audio_dir().unwrap()),
+       "p" => move_file(p, &dirs::picture_dir().unwrap()),
+       "v" => move_file(p, &dirs::video_dir().unwrap()),
        "a" => process::exit(0x0100),
-       _ => println!("idk")
+       "o" => {process::Command::new("open").arg(p).output().expect("unable to open file, this command only works on Mac");},
+       "b" => bat_file(p),
+        _  =>   println!("Skipped File")
    }
 }
 
-fn main() {
+fn main() -> io::Result<()>{
     println!("Download Caretaker Rust");
-    let download_dir = dirs::download_dir().unwrap();    
-    let paths = fs::read_dir(download_dir).unwrap();
+    let dl_dir = dirs::download_dir().unwrap();    
+    let paths: Vec<_> = fs::read_dir(&dl_dir)?
+                            .filter_map(Result::ok)
+                            .map(|entry| entry.path()).collect();
     for path in paths {
-        let path = path.unwrap().path();
         let metadata = fs::metadata(&path).unwrap();
         if let Ok(file_modified) = metadata.modified(){
             // If file is older than a month, delete it
@@ -36,4 +68,5 @@ fn main() {
             }
         }
     }
+    Ok(())
 }
