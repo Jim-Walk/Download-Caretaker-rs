@@ -1,6 +1,6 @@
 [package]
 name = "download_caretaker"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["andrewpsuedonym <j.m.walker@live.co.uk>"]
 edition = "2018"
 description = "Keeps your downloads folder tidy"
@@ -12,3 +12,4 @@ readme = "README.md"
 [dependencies]
 dirs = "2.0.2"
 bat = "0.15.1"
+clap = "~2.33"

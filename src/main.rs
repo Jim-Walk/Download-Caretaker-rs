@@ -1,5 +1,8 @@
 extern crate dirs;
 extern crate bat;
+extern crate clap;
+
+use clap::{App, Arg};
 use bat::{PrettyPrinter, line_range::LineRange, line_range::LineRanges};
 use std::time::SystemTime;
 use std::path::Path;
@@ -74,6 +77,21 @@ fn delete_or_move_file(p: &Path) {
 }
 
 fn main() -> io::Result<()>{
+    let matches = App::new("Download Caretaker (rust)")
+                        .version("1.0")
+                        .author("Jim Walker")
+                        .arg(Arg::with_name("days")
+                            .short("d")
+                            .long("days")
+                            .help("Set the maximum age in days for items in your downloads folder")
+                            .takes_value(true))
+                        .about("Keeps your downloads folder tidy")
+                        .get_matches();
+
+    let days = matches.value_of("days")
+                    .unwrap_or("30")
+                    .parse::<u64>()
+                    .unwrap();
     println!("Download Caretaker Rust");
     let dl_dir = dirs::download_dir().unwrap();    
     let paths: Vec<_> = fs::read_dir(&dl_dir)?
@@ -84,7 +102,7 @@ fn main() -> io::Result<()>{
         if let Ok(file_modified) = metadata.modified(){
             // If file is older than a month, delete it
             if let Ok(file_age) = SystemTime::now().duration_since(file_modified){
-                if file_age.as_secs() > 60 * 60 * 24 * 7 {
+                if file_age.as_secs() > 60 * 60 * 24 * days {
                     delete_or_move_file(&path);
                 }
             }
