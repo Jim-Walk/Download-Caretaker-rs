@@ -19,6 +19,6 @@ To launch download caretaker each time you launch your terminal you can run the 
 
 ## TODO
 
-- [] Add open file feature 
+- [] Add open file feature for linux
 
 
