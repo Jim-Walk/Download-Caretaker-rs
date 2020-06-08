@@ -1,6 +1,6 @@
 # Download Caretaker
 
-Script to help kepp your downloads folder clean. Largely a clone of [the python Download Caretaker](https://github.com/Jim-Walk/Download-Caretaker) which I wrote. The script checks your downloads folder for files and dirs older than 30 days, and asks you what you want to do with them.
+Script to help keep your downloads folder clean. Largely a clone of [the python Download Caretaker](https://github.com/Jim-Walk/Download-Caretaker) which I wrote. The script checks your downloads folder for files and dirs older than 30 days, and asks you what you want to do with them.
 The (o)pen feature only works on Mac for now.
 
 ## Install
