@@ -18,10 +18,10 @@ fn trim_path(p: &Path) -> String {
 
 // Helper function to save repeating error checking and print statements
 fn move_file(src: &Path, dest_folder: &Path) {
-    if let Ok(f_name) = src.strip_prefix(dest_folder) {
-        let new_f_name = dest_folder.join(f_name);
-        fs::rename(src, new_f_name).unwrap();
-    }
+    let f_name = trim_path(src);
+    let new_f_name = dest_folder.join(f_name);
+    fs::rename(src, new_f_name).unwrap();
+    
     println!("Moved to {}", dest_folder.to_str().unwrap());
     println!("-------------------------------------------")
 }

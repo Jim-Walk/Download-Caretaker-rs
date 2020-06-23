@@ -1,6 +1,6 @@
 [package]
 name = "download_caretaker"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["andrewpsuedonym <j.m.walker@live.co.uk>"]
 edition = "2018"
 description = "Keeps your downloads folder tidy"
