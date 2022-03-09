@@ -71,6 +71,7 @@ fn delete_or_move_file(p: &Path) {
                                      .arg(p)
                                      .output()
                                      .expect("unable to open file, this command only works on Mac");
+                delete_or_move_file(p);
               },
         _  =>   println!("Skipped File")
    }
